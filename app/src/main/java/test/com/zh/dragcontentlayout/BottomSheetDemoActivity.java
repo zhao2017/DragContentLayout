@@ -58,7 +58,7 @@ public class BottomSheetDemoActivity extends Activity {
     }
 
     private void initView() {
-        MyAdapter myAdapter = new MyAdapter(this,mList);
+        MyAdapter myAdapter = new MyAdapter(this, mList);
         recycerview.setLayoutManager(new LinearLayoutManager(BottomSheetDemoActivity.this));
         recycerview.setAdapter(myAdapter);
     }
@@ -89,8 +89,10 @@ public class BottomSheetDemoActivity extends Activity {
         public int getItemCount() {
             return mList.size();
         }
+
         class MyViewHolder extends RecyclerView.ViewHolder {
             private TextView tvConent;
+
             public MyViewHolder(View itemView) {
                 super(itemView);
                 tvConent = itemView.findViewById(R.id.tv_content);
@@ -113,12 +115,34 @@ public class BottomSheetDemoActivity extends Activity {
                 public static final int STATE_COLLAPSED = 4;
                 public static final int STATE_HIDDEN = 5;
                 public static final int STATE_HALF_EXPANDED = 6;*/
-                Log.i(TAG, "i==" + i);
+                switch (i) {
+                    case 1:
+                        Log.i(TAG, "STATE_DRAGGING 过渡");
+                        break;
+                    case 2:
+                        Log.i(TAG, "STATE_SETTLING 当手指抬起之后");
+                        break;
+                    case 3:
+                        Log.i(TAG, "STATE_EXPANDED 展开");
+                        break;
+                    case 4:
+                        Log.i(TAG, "STATE_COLLAPSED 收起");
+                        break;
+                    case 5:
+                        Log.i(TAG, "STATE_HIDDEN 隐藏");
+                        break;
+                    case 6:
+                        Log.i(TAG, "STATE_HALF_EXPANDED ");
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
             @Override
-            public void onSlide( View view, float slideOffset) {
-                Log.i(TAG,"v=="+slideOffset);
+            public void onSlide(View view, float slideOffset) {
+                Log.i(TAG, "v==" + slideOffset);
             }
         });
 
