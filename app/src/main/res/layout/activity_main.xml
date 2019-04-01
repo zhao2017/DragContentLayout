@@ -39,5 +39,12 @@
            />
     </test.com.zh.dragcontentlayout.widget.MyViewGroup>
 
+    <Button
+        android:layout_centerInParent="true"
+        android:textAllCaps="false"
+        android:onClick="onNextClick"
+        android:text="next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
