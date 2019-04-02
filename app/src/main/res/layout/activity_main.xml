@@ -2,49 +2,57 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <test.com.zh.dragcontentlayout.widget.MyViewGroup
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:background="#ff0"
-            android:textStyle="bold"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:text="Hello World!"
-           />
-        <TextView
             android:background="#ff0"
-            android:textStyle="bold"
+            android:text="Hello World!"
+            android:textStyle="bold" />
+
+        <TextView
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:background="#ff0"
             android:text="Hello World!"
-           />
+            android:textStyle="bold" />
+
         <TextView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:background="#f90"
-            android:textStyle="bold"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
             android:text="Hello World!"
-           />
+            android:textStyle="bold" />
+
         <TextView
-            android:background="#099"
-            android:textStyle="bold"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:background="#099"
             android:text="Hello World!"
-           />
+            android:textStyle="bold" />
     </test.com.zh.dragcontentlayout.widget.MyViewGroup>
 
     <Button
+        android:id="@+id/bt_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textAllCaps="false"
         android:onClick="onNextClick"
         android:text="next"
+        android:textAllCaps="false" />
+
+
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bt_next"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/svg_image" />
 
 </RelativeLayout>
