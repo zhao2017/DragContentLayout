@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import test.com.zh.dragcontentlayout.ui.SpannableStringActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,5 +16,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onNextClick(View view) {
         BottomSheetDemoActivity.navToActivity(MainActivity.this);
+    }
+
+    public void onClickStringSpannable(View view) {
+        SpannableStringActivity.navToActivity(MainActivity.this);
     }
 }

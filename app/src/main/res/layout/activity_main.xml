@@ -45,6 +45,14 @@
         android:text="next"
         android:textAllCaps="false" />
 
+    <Button
+        android:layout_centerHorizontal="true"
+        android:onClick="onClickStringSpannable"
+        android:textAllCaps="false"
+        android:text="test_spannableString"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ImageView
         android:layout_marginTop="30dp"
         android:src="@drawable/ic_cloud_upload"
