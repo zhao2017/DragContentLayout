@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -74,11 +75,15 @@ public class SpannableStringActivity extends Activity {
         for (int i = 0; i < replacementSpans.size(); i++) {
             spannableStringBuilder.setSpan(replacementSpans.get(i), 20, 22, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+        for (int i = 0; i < replacementSpans.size(); i++) {
+            spannableStringBuilder.setSpan(replacementSpans.get(i), 40, 42, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         MyClickSpan myClickSpan = new MyClickSpan();
-        spannableStringBuilder.setSpan(myClickSpan, 20, 22, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableStringBuilder.setSpan(myClickSpan, 40, 42, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         // 设置此方法后，点击事件才能生效
         tv1.setMovementMethod(LinkMovementMethod.getInstance());
         tv1.setText(spannableStringBuilder);
+        // 解决点击后背景变色的问题
         tv1.setHighlightColor(getResources().getColor(android.R.color.transparent));
     }
 
@@ -105,20 +110,23 @@ public class SpannableStringActivity extends Activity {
         spannableString.setSpan(myClickSpan, 8, 15, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         // 设置此方法后，点击事件才能生效
         tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-
         tvContent.setText(spannableString);
-
-
+//        tvContent.setHighlightColor(ContextCompat.getColor(SpannableStringActivity.this, R.color.transparent));
     }
 
     class MyClickSpan extends ClickableSpan {
         @Override
         public void onClick(View widget) {
             // 处理小米弹出应用名字的问题
-            widget.setBackground(null);
             Toast toast = Toast.makeText(SpannableStringActivity.this, null, Toast.LENGTH_LONG);
             toast.setText("我被点击了！！！");
             toast.show();
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+//            ds.setColor(ds.linkColor);  // 去掉点击时间的颜色
+            ds.setUnderlineText(false);
         }
     }
 
