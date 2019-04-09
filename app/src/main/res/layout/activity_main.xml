@@ -46,10 +46,20 @@
         android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/bt_one"
         android:layout_centerHorizontal="true"
         android:onClick="onClickStringSpannable"
         android:textAllCaps="false"
         android:text="test_spannableString"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:onClick="onSelectWordsClick"
+        android:textAllCaps="false"
+        android:text="select_words_fill_blanks"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/bt_one"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

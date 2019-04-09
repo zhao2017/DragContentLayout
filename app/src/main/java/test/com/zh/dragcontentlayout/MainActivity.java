@@ -1,9 +1,10 @@
 package test.com.zh.dragcontentlayout;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import test.com.zh.dragcontentlayout.ui.SelectWordsFillBlanksActivity2;
 import test.com.zh.dragcontentlayout.ui.SpannableStringActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,5 +21,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickStringSpannable(View view) {
         SpannableStringActivity.navToActivity(MainActivity.this);
+    }
+
+    public void onSelectWordsClick(View view) {
+        SelectWordsFillBlanksActivity2.navToActivity(MainActivity.this);
     }
 }
