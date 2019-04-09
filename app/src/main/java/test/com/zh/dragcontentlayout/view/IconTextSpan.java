@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ReplacementSpan;
@@ -23,7 +24,7 @@ public class IconTextSpan extends ReplacementSpan {
     private int mBgColorResId; //Icon背景颜色
     private String mText;  //Icon内文字
     private float mBgHeight; // icon背景高度
-    private float mBgWith;  // icon背景宽度
+    private float mBgWidth;  // icon背景宽度
     private float mRadius;  //Icon圆角半径
     private float mRightMargin;  //右边距
     private float mTextSize; //文字大小
@@ -39,7 +40,7 @@ public class IconTextSpan extends ReplacementSpan {
         }
         initDefaultValue(context, bgColorResId, text);
         // 计算背景的宽度
-        this.mBgWith = caculateBgWidth(text);
+        this.mBgWidth = caculateBgWidth(text);
         initPaint();
     }
 
@@ -104,11 +105,34 @@ public class IconTextSpan extends ReplacementSpan {
      */
     @Override
     public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
-        return 0;
+        return (int) (mBgWidth + mRightMargin);
     }
 
+    /**
+     * @param canvas
+     * @param text
+     * @param start
+     * @param end
+     * @param x
+     * @param top
+     * @param y
+     * @param bottom
+     * @param paint
+     */
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
+        //画背景
+        Paint bgPaint = new Paint();
+        bgPaint.setColor(mContext.getResources().getColor(mBgColorResId));
+        bgPaint.setStyle(Paint.Style.FILL);
+        bgPaint.setAntiAlias(true);
+        Paint.FontMetrics metrics = paint.getFontMetrics();
+        float textHeight = metrics.descent - metrics.ascent;
+        //算出背景开始画的y坐标
+        float bgStartY = y + (textHeight - mBgHeight) / 2 + metrics.ascent;
+        //画背景
+        RectF bgRect = new RectF(x, bgStartY, x + mBgWidth, bgStartY + mBgHeight);
+        canvas.drawRoundRect(bgRect, mRadius, mRadius, bgPaint);
 
     }
 }
