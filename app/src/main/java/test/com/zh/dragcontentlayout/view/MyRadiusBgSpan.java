@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
 import android.text.style.ReplacementSpan;
+import android.util.Log;
 
 import test.com.zh.dragcontentlayout.R;
 import test.com.zh.dragcontentlayout.utils.DisplayUtils;
@@ -23,6 +24,8 @@ public class MyRadiusBgSpan extends ReplacementSpan {
     public static final int STYLE_FILL = 0;//填充
     public static final int STYLE_STROCK = 1;//扫边。扫边颜色默认和字体颜色一致
     private int mStyle = STYLE_FILL;
+    private int mPostion;
+    private int currentPostion;
 
     /**
      * @param radius 圆角半径
@@ -35,10 +38,12 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         mPaint = new Paint();
     }
 
-    public MyRadiusBgSpan(Context context) {
+    public MyRadiusBgSpan(Context context, int postion) {
         this.mContext = context;
+        this.mPostion = postion;
         mPaint = new Paint();
     }
+
     /**
      * @param radius 圆角半径
      */
@@ -67,17 +72,25 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(DisplayUtils.dip2px(1));
-        mPaint.setColor(ContextCompat.getColor(mContext, R.color.color_0093e8));
-        RectF oval = new RectF(x, y + paint.ascent() - DisplayUtils.dip2px(5), x + DisplayUtils.dip2px(30), y + paint.descent() + DisplayUtils.dip2px(5));
+        if(mPostion==1){
+            mPaint.setColor(ContextCompat.getColor(mContext, R.color.color_0093e8));
+        }else{
+            mPaint.setColor(ContextCompat.getColor(mContext,R.color.color_999));
+        }
         //x.y均为原字符串文字的参数
         //设置背景矩形，x为文字左边缘的x值，y为文字的baseline的y值。paint.ascent()获得baseline到文字上边缘的值，paint.descent()获得baseline到文字下边缘
-        canvas.drawRoundRect(oval, mRadius, mRadius, mPaint);//绘制圆角矩形，第二个参数是x半径，第三个参数是y半径
+        float textheight = paint.descent()-paint.ascent();
+        // 计算出字体头部到要求高度的距离
+        float space = (DisplayUtils.dip2px(30)-textheight)/2;
+        RectF oval = new RectF(x, y + paint.ascent() - space, x + DisplayUtils.dip2px(30), y + paint.descent() + space);
+        canvas.drawRoundRect(oval, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);//绘制圆角矩形，第二个参数是x半径，第三个参数是y半径
         //文字 -- 绘制的文字要比原文字小 , 默认小 4sp
         int originalSize = px2sp((int) paint.getTextSize());
         paint.setTextSize(originalSize - 4);
         paint.setColor(mTxtColor);
         int padding = (int) (mSize - paint.measureText(text.subSequence(start, end).toString()));
         canvas.drawText(text, start, end, x + padding / 2, y, paint);//绘制文字
+        Log.e("draw", "text==" + text+";textHeight=="+textheight+";y=="+y+";paint.ascent"+paint.ascent()+";space=="+space);
 
     }
 
@@ -87,6 +100,11 @@ public class MyRadiusBgSpan extends ReplacementSpan {
     public int px2sp(int pxValue) {
         final float fontScale = mContext.getResources().getDisplayMetrics().scaledDensity;
         return (int) (pxValue / fontScale + 0.5f);
+    }
+
+
+    public void setCurrentPostion(int currentPostion){
+        this.currentPostion = currentPostion;
     }
 
 }

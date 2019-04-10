@@ -11,5 +11,4 @@
         android:lineSpacingExtra="10dp"
         android:padding="15dp"
         android:textColor="#333" />
-
 </RelativeLayout>
