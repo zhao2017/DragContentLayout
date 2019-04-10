@@ -35,6 +35,10 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         mPaint = new Paint();
     }
 
+    public MyRadiusBgSpan(Context context) {
+        this.mContext = context;
+        mPaint = new Paint();
+    }
     /**
      * @param radius 圆角半径
      */
