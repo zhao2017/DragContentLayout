@@ -42,8 +42,9 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
     private TagFlowLayout tagFlowLayout;
     private List<MyRadiusBgSpan> mList = new ArrayList<>();
     private Map<ClickableSpan, Integer> map = new HashMap<>();
-
     private int currentSpanPostion = 0;
+
+    private MyRadiusBgSpan currentMyRadiusBgSpan;
 
     public SelectWordsFillBlanksView(Context context) {
         this(context, null);
@@ -91,7 +92,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         tvContent.setHighlightColor(ContextCompat.getColor(mContext, R.color.transparent));
     }
 
-    public int getCurrentSpanPostion(){
+    public int getCurrentSpanPostion() {
         return currentSpanPostion;
     }
 
@@ -100,14 +101,34 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         Toast toast = Toast.makeText(mContext, null, Toast.LENGTH_SHORT);
         toast.setText("postion==" + postion);
         toast.show();
+        this.currentMyRadiusBgSpan = myRadiusBgSpan;
         // 主要是因为存的时候index++第一个初始位置是1
         myRadiusBgSpan.setCurrentPostion(postion - 1);
-        this.currentSpanPostion = postion-1;
-        changeSelectWords();
+        this.currentSpanPostion = postion - 1;
+        invalidateTv();
     }
 
     /**
-     *  没有下划线的点击Span
+     * 插入选项数据
+     *
+     * @param insertTextData
+     * @param currentSpanPostion
+     */
+    public void setInsertTextData(String insertTextData, int currentSpanPostion) {
+
+        /**
+         * 默认是取的是第一个Span
+         */
+        if (currentMyRadiusBgSpan == null) {
+            currentMyRadiusBgSpan = mList.get(0);
+        }
+        currentMyRadiusBgSpan.setQuestionText(insertTextData, currentSpanPostion);
+        invalidateTv();
+    }
+
+
+    /**
+     * 没有下划线的点击Span
      */
     class NolineClickSpan extends ClickableSpan {
         @Override
@@ -126,7 +147,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
     /**
      * 刷新TextView
      */
-    private void changeSelectWords() {
+    private void invalidateTv() {
         tvContent.invalidate();
     }
 

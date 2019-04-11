@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
     }
 
     private void initData() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 5; i++) {
             switch (i) {
                 case 0:
                     mList.add("激动");
@@ -78,13 +79,14 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
             private int dp2 = DisplayUtils.dip2px(2);
             private int dp8 = DisplayUtils.dip2px(8);
             private int dp10 = DisplayUtils.dip2px(10);
+
             @Override
             public View getView(FlowLayout parent, int position, String str) {
                 TextView textView = new TextView(parent.getContext());
                 textView.setPadding(dp8, dp2, dp8, dp2);
-                textView.setTextSize(12);
+                textView.setTextSize(20);
                 textView.setText(str);
-                textView.setTextColor(ContextCompat.getColor(SelectWordsFillBlanksActivity3.this,R.color.color_666));
+                textView.setTextColor(ContextCompat.getColor(SelectWordsFillBlanksActivity3.this, R.color.color_666));
                 textView.setBackgroundResource(R.color.color_f7f7f9);
                 ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 lp.topMargin = dp8;
@@ -98,11 +100,12 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
                 int currentSpanPostion = selectWordsView.getCurrentSpanPostion();
-                Toast toast = Toast.makeText(SelectWordsFillBlanksActivity3.this,null,Toast.LENGTH_SHORT);
-                toast.setText("span的位置为="+currentSpanPostion);
+                Toast toast = Toast.makeText(SelectWordsFillBlanksActivity3.this, null, Toast.LENGTH_SHORT);
+                toast.setText("span的位置为=" + currentSpanPostion);
                 toast.show();
                 String currentQuestion = mList.get(position);
-
+                Log.e("currentQuestion", "currentQuestion==" + currentQuestion);
+                selectWordsView.setInsertTextData(currentQuestion, currentSpanPostion);
                 return false;
             }
         });

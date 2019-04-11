@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
+import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.ReplacementSpan;
 import android.util.Log;
 
@@ -27,6 +29,8 @@ public class MyRadiusBgSpan extends ReplacementSpan {
     private int mPostion = 0;
     private int currentPostion = 0;
     private OnSpanClickListener onSpanClickListener;
+    private String questionText;
+    private int mCurrentInsertSpanPostion = 0;
 
     /**
      * @param radius 圆角半径
@@ -73,8 +77,8 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(DisplayUtils.dip2px(1));
-        Log.e("onDraw","currentPostion=="+currentPostion);
-        if (mPostion-1==currentPostion) {
+        Log.e("onDraw", "currentPostion==" + currentPostion);
+        if (mPostion - 1 == currentPostion) {
             mPaint.setColor(ContextCompat.getColor(mContext, R.color.color_0093e8));
         } else {
             mPaint.setColor(ContextCompat.getColor(mContext, R.color.color_999));
@@ -86,14 +90,29 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         float space = (DisplayUtils.dip2px(30) - textheight) / 2;
         RectF oval = new RectF(x, y + paint.ascent() - space, x + DisplayUtils.dip2px(30), y + paint.descent() + space);
         canvas.drawRoundRect(oval, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);//绘制圆角矩形，第二个参数是x半径，第三个参数是y半径
-        //文字 -- 绘制的文字要比原文字小 , 默认小 4sp
+        if (!TextUtils.isEmpty(questionText)){
+            // 当文本不为空说明插入过来数据了
+            if(mCurrentInsertSpanPostion==mPostion-1){
+                // 此处是要插入的位置
+                TextPaint textPaint = new TextPaint();
+                textPaint.setAntiAlias(true);
+                textPaint.setColor(ContextCompat.getColor(mContext,R.color.color_0093e8));
+                textPaint.setTextSize(DisplayUtils.sp2px(16));
+                float textWith = textPaint.measureText(questionText);
+                canvas.drawText(questionText,x,y,textPaint);
+            }
+
+        }
+
+        /*    //文字 -- 绘制的文字要比原文字小 , 默认小 4sp
         int originalSize = px2sp((int) paint.getTextSize());
         paint.setTextSize(originalSize - 4);
         paint.setColor(mTxtColor);
         int padding = (int) (mSize - paint.measureText(text.subSequence(start, end).toString()));
-        canvas.drawText(text, start, end, x + padding / 2, y, paint);//绘制文字
-        Log.e("draw", "text==" + text + ";textHeight==" + textheight + ";y==" + y + ";paint.ascent" + paint.ascent() + ";space==" + space);
+        canvas.drawText(text, start, end, x + padding / 2, y, paint);//绘制文字*/
+            Log.e("draw", "text==" + text + ";textHeight==" + textheight + ";y==" + y + ";paint.ascent" + paint.ascent() + ";space==" + space);
         currentPostion = -1;
+        questionText ="";
     }
 
     /**
@@ -109,8 +128,17 @@ public class MyRadiusBgSpan extends ReplacementSpan {
     }
 
 
-    public int getCurrentPostion(){
+    public int getCurrentPostion() {
         return currentPostion;
+    }
+
+    public void setQuestionText(String questionText, int currentInsertSpanPostion) {
+        this.questionText = questionText;
+        this.mCurrentInsertSpanPostion = currentInsertSpanPostion;
+    }
+
+    public String getQuestionText() {
+        return questionText;
     }
 
     public interface OnSpanClickListener {
