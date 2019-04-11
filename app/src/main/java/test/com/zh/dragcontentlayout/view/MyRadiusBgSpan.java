@@ -31,6 +31,8 @@ public class MyRadiusBgSpan extends ReplacementSpan {
     private OnSpanClickListener onSpanClickListener;
     private String questionText;
     private int mCurrentInsertSpanPostion = 0;
+    private float topPadding = DisplayUtils.dip2px(5);
+    private float leftPadding = DisplayUtils.dip2px(7);
 
     /**
      * @param radius 圆角半径
@@ -88,31 +90,37 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         float textheight = paint.descent() - paint.ascent();
         // 计算出字体头部到要求高度的距离
         float space = (DisplayUtils.dip2px(30) - textheight) / 2;
-        RectF oval = new RectF(x, y + paint.ascent() - space, x + DisplayUtils.dip2px(30), y + paint.descent() + space);
-        canvas.drawRoundRect(oval, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);//绘制圆角矩形，第二个参数是x半径，第三个参数是y半径
-        if (!TextUtils.isEmpty(questionText)){
+        // 处理填空数据的逻辑
+        if (!TextUtils.isEmpty(questionText)) {
             // 当文本不为空说明插入过来数据了
-            if(mCurrentInsertSpanPostion==mPostion-1){
+            if (mCurrentInsertSpanPostion == mPostion - 1) {
                 // 此处是要插入的位置
                 TextPaint textPaint = new TextPaint();
                 textPaint.setAntiAlias(true);
-                textPaint.setColor(ContextCompat.getColor(mContext,R.color.color_0093e8));
+                textPaint.setColor(ContextCompat.getColor(mContext, R.color.color_0093e8));
                 textPaint.setTextSize(DisplayUtils.sp2px(16));
                 float textWith = textPaint.measureText(questionText);
-                canvas.drawText(questionText,x,y,textPaint);
+//                canvas.drawText(questionText,x,y,textPaint);
+                // 需要根据文字的大小进行方框的重新绘制
+                if ((textWith + 2 * leftPadding) >= DisplayUtils.dip2px(30)) {
+                    //表示要显示的字体的宽度超过了正常的边框的界限的时候
+                   /* canvas.drawText(questionText, x + leftPadding, y, textPaint);
+                    RectF rectF = new RectF(x, y + paint.ascent() - space, x + textWith + 2 * leftPadding, y + paint.descent() + space);
+                    canvas.drawRoundRect(rectF, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);*/
+                }else{
+                    //不超过边框的处理
+                    float moveSpace = (DisplayUtils.dip2px(30)-textWith)/2;
+                    canvas.drawText(questionText,x+moveSpace,y,textPaint);
+                }
+                Log.e("textWith", "textWith==" + textWith + ";框的宽度==" + DisplayUtils.dip2px(30));
             }
 
         }
-
-        /*    //文字 -- 绘制的文字要比原文字小 , 默认小 4sp
-        int originalSize = px2sp((int) paint.getTextSize());
-        paint.setTextSize(originalSize - 4);
-        paint.setColor(mTxtColor);
-        int padding = (int) (mSize - paint.measureText(text.subSequence(start, end).toString()));
-        canvas.drawText(text, start, end, x + padding / 2, y, paint);//绘制文字*/
-            Log.e("draw", "text==" + text + ";textHeight==" + textheight + ";y==" + y + ";paint.ascent" + paint.ascent() + ";space==" + space);
+        RectF oval = new RectF(x, y + paint.ascent() - space, x + DisplayUtils.dip2px(30), y + paint.descent() + space);
+        canvas.drawRoundRect(oval, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);//绘制圆角矩形，第二个参数是x半径，第三个参数是y半径
+        Log.e("draw", "text==" + text + ";textHeight==" + textheight + ";y==" + y + ";paint.ascent" + paint.ascent() + ";space==" + space);
         currentPostion = -1;
-        questionText ="";
+        questionText = "";
     }
 
     /**

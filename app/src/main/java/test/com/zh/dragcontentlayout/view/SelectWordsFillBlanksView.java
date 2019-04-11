@@ -115,7 +115,6 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
      * @param currentSpanPostion
      */
     public void setInsertTextData(String insertTextData, int currentSpanPostion) {
-
         /**
          * 默认是取的是第一个Span
          */
