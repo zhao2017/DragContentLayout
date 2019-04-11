@@ -97,7 +97,12 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
         taglayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
-                Toast.makeText(SelectWordsFillBlanksActivity3.this,"postion=="+position,Toast.LENGTH_LONG).show();
+                int currentSpanPostion = selectWordsView.getCurrentSpanPostion();
+                Toast toast = Toast.makeText(SelectWordsFillBlanksActivity3.this,null,Toast.LENGTH_SHORT);
+                toast.setText("span的位置为="+currentSpanPostion);
+                toast.show();
+                String currentQuestion = mList.get(position);
+
                 return false;
             }
         });

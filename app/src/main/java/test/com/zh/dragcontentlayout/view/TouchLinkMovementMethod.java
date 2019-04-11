@@ -5,6 +5,7 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
@@ -14,6 +15,20 @@ import android.widget.TextView;
  */
 
 public class TouchLinkMovementMethod extends LinkMovementMethod {
+
+    private static TouchLinkMovementMethod touchLinkMovementMethod;
+
+    private TouchLinkMovementMethod(){
+
+    }
+
+    public static TouchLinkMovementMethod getInstance(){
+        if(touchLinkMovementMethod==null){
+            touchLinkMovementMethod = new TouchLinkMovementMethod();
+        }
+        return touchLinkMovementMethod;
+    }
+
 
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
@@ -31,9 +46,9 @@ public class TouchLinkMovementMethod extends LinkMovementMethod {
             Layout layout = widget.getLayout();
             int line = layout.getLineForVertical(y);
             int off = layout.getOffsetForHorizontal(line, x);
-
-            ClickableSpan[] link = buffer.getSpans(off, off, SelectWordsFillBlanksView.NolineClickSpan.class);
+           ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
             if (link.length != 0) {
+                Log.e("method","------我执行了啊----");
                 link[0].onClick(widget);
                 return true;
             } else {
@@ -41,6 +56,6 @@ public class TouchLinkMovementMethod extends LinkMovementMethod {
             }
         }
 
-        return super.onTouchEvent(widget, buffer, event);
+        return false;
     }
 }

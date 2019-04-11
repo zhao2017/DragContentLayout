@@ -7,7 +7,6 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -20,7 +19,9 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import org.xml.sax.XMLReader;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import test.com.zh.dragcontentlayout.R;
@@ -32,15 +33,17 @@ import test.com.zh.dragcontentlayout.utils.StringUtils;
  *
  * @author: zhaoh
  */
-public class SelectWordsFillBlanksView extends RelativeLayout {
+public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiusBgSpan.OnSpanClickListener {
     private String SPACE_TAG = "[space]";
     private String FILL_TAG = "&nbsp;&nbsp;<mytag>&nbsp;";
     private String MY_TAG_NAME = "mytag";
     private Context mContext;
     private TextView tvContent;
     private TagFlowLayout tagFlowLayout;
+    private List<MyRadiusBgSpan> mList = new ArrayList<>();
+    private Map<ClickableSpan, Integer> map = new HashMap<>();
 
-    private Map<ClickableSpan,Integer> map = new HashMap<>();
+    private int currentSpanPostion = 0;
 
     public SelectWordsFillBlanksView(Context context) {
         this(context, null);
@@ -64,36 +67,54 @@ public class SelectWordsFillBlanksView extends RelativeLayout {
     public void setData(String content) {
         String replace = content.replace(SPACE_TAG, FILL_TAG);
         map.clear();
+        mList.clear();
+        tvContent.setMovementMethod(null);
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) Html.fromHtml(StringUtils.remove_p_tag(StringUtils.replaceUnderline(StringUtils.replaceExpression(replace))), null, new Html.TagHandler() {
-           int index =0;
+            int index = 0;
+
             @Override
             public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
                 if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
                     index++;
-                    MyRadiusBgSpan myRadiusBgSpan = new MyRadiusBgSpan(mContext,index);
+                    MyRadiusBgSpan myRadiusBgSpan = new MyRadiusBgSpan(mContext, index);
                     output.setSpan(myRadiusBgSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     NolineClickSpan nolineClickSpan = new NolineClickSpan();
-                    map.put(nolineClickSpan,index);
-                    output.setSpan(nolineClickSpan,output.length()-1,output.length(),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    Log.e("View","length=="+output.length());
+                    map.put(nolineClickSpan, index);
+                    mList.add(myRadiusBgSpan);
+                    output.setSpan(nolineClickSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Log.e("View", "length==" + output.length());
                 }
             }
         });
-        tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+        tvContent.setMovementMethod(TouchLinkMovementMethod.getInstance());
         tvContent.setText(spannableStringBuilder);
-        tvContent.setHighlightColor(ContextCompat.getColor(mContext,R.color.transparent));
+        tvContent.setHighlightColor(ContextCompat.getColor(mContext, R.color.transparent));
     }
 
-    class NolineClickSpan extends ClickableSpan {
-        public NolineClickSpan(){
+    public int getCurrentSpanPostion(){
+        return currentSpanPostion;
+    }
 
-        }
+    @Override
+    public void onSpanClick(int postion, MyRadiusBgSpan myRadiusBgSpan) {
+        Toast toast = Toast.makeText(mContext, null, Toast.LENGTH_SHORT);
+        toast.setText("postion==" + postion);
+        toast.show();
+        // 主要是因为存的时候index++第一个初始位置是1
+        myRadiusBgSpan.setCurrentPostion(postion - 1);
+        this.currentSpanPostion = postion-1;
+        changeSelectWords();
+    }
+
+    /**
+     *  没有下划线的点击Span
+     */
+    class NolineClickSpan extends ClickableSpan {
         @Override
         public void onClick(View widget) {
-            Log.e("span","span=="+this);
+            Log.e("span", "span==" + this);
             int postion = map.get(this);
-            changeSelectWords();
-            Toast.makeText(tvContent.getContext(), "Hello World"+postion, Toast.LENGTH_LONG).show();
+            onSpanClick(postion, mList.get(postion - 1));
         }
 
         @Override
@@ -101,7 +122,12 @@ public class SelectWordsFillBlanksView extends RelativeLayout {
             ds.setUnderlineText(false);
         }
     }
+
+    /**
+     * 刷新TextView
+     */
     private void changeSelectWords() {
+        tvContent.invalidate();
     }
 
 }
