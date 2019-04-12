@@ -37,7 +37,7 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
     SelectWordsFillBlanksView selectWordsView;
     @BindView(R.id.taglayout)
     TagFlowLayout taglayout;
-    private String content = "<p>途中的两个球相比[space][space]的撒大家京东徐返多少发奥[space]奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥吧范发[space]卡了</p>";
+    private String content = "<p>途中的两个球相比[space][space]6的撒大家京东徐返多少发奥[space]8奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥吧范发9[space]卡了</p>";
 
     private List<String> mList = new ArrayList<>();
 
@@ -58,7 +58,7 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
         for (int i = 0; i < 5; i++) {
             switch (i) {
                 case 0:
-                    mList.add("激动");
+                    mList.add("激动河岸bucuo啦");
                     break;
                 case 1:
                     mList.add("开心");
@@ -69,7 +69,7 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
                 case 3:
                     mList.add("a");
                 default:
-                    mList.add("很好");
+                    mList.add("课文长度不要钱的你多放点没事");
                     break;
 
             }

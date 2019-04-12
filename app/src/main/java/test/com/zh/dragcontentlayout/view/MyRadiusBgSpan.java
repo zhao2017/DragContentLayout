@@ -28,11 +28,12 @@ public class MyRadiusBgSpan extends ReplacementSpan {
     private int mStyle = STYLE_FILL;
     private int mPostion = 0;
     private int currentPostion = 0;
-    private OnSpanClickListener onSpanClickListener;
     private String questionText;
     private int mCurrentInsertSpanPostion = 0;
     private float topPadding = DisplayUtils.dip2px(5);
     private float leftPadding = DisplayUtils.dip2px(7);
+
+    private int totalSpanSize = 0;
 
     /**
      * @param radius 圆角半径
@@ -71,6 +72,25 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         //mSize就是span的宽度，span有多宽，开发者可以在这里随便定义规则
         // 我的规则：这里text传入的是SpannableString，start，end对应setSpan方法相关参数
         // 可以根据传入起始截至位置获得截取文字的宽度，最后加上左右两个圆角的半径得到span宽度
+        // 这个地方就是对Span的大小做动态改变的逻辑
+        if(!TextUtils.isEmpty(questionText)){
+            if(mCurrentInsertSpanPostion==mPostion-1){
+                TextPaint textPaint = new TextPaint();
+                textPaint.setAntiAlias(true);
+                textPaint.setTextSize(DisplayUtils.sp2px(16));
+                float textWith = textPaint.measureText(questionText);
+                if ((textWith + 2 * leftPadding) >= DisplayUtils.dip2px(30)) {
+                    //表示要显示的字体的宽度超过了正常的边框的界限的时候
+                    return (int) (textWith+2*leftPadding);
+                } else {
+                    //不超过边框的处理
+                    return DisplayUtils.dip2px(30);
+                }
+            }
+        }else{
+            return DisplayUtils.dip2px(30);
+        }
+
         return DisplayUtils.dip2px(30);
     }
 
@@ -79,7 +99,7 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(DisplayUtils.dip2px(1));
-        Log.e("onDraw", "currentPostion==" + currentPostion);
+        Log.e("onDraw","currentPostion=="+currentPostion+";totalSize=="+totalSpanSize+"text=="+text);
         if (mPostion - 1 == currentPostion) {
             mPaint.setColor(ContextCompat.getColor(mContext, R.color.color_0093e8));
         } else {
@@ -104,21 +124,19 @@ public class MyRadiusBgSpan extends ReplacementSpan {
                 // 需要根据文字的大小进行方框的重新绘制
                 if ((textWith + 2 * leftPadding) >= DisplayUtils.dip2px(30)) {
                     //表示要显示的字体的宽度超过了正常的边框的界限的时候
-                   /* canvas.drawText(questionText, x + leftPadding, y, textPaint);
+                    canvas.drawText(questionText, x + leftPadding, y, textPaint);
                     RectF rectF = new RectF(x, y + paint.ascent() - space, x + textWith + 2 * leftPadding, y + paint.descent() + space);
-                    canvas.drawRoundRect(rectF, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);*/
-                }else{
+                    canvas.drawRoundRect(rectF, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);
+                } else {
                     //不超过边框的处理
-                    float moveSpace = (DisplayUtils.dip2px(30)-textWith)/2;
-                    canvas.drawText(questionText,x+moveSpace,y,textPaint);
+                    float moveSpace = (DisplayUtils.dip2px(30) - textWith) / 2;
+                    canvas.drawText(questionText, x + moveSpace, y, textPaint);
                 }
-                Log.e("textWith", "textWith==" + textWith + ";框的宽度==" + DisplayUtils.dip2px(30));
             }
-
+        }else{
+            RectF oval = new RectF(x, y + paint.ascent() - space, x + DisplayUtils.dip2px(30), y + paint.descent() + space);
+            canvas.drawRoundRect(oval, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);//绘制圆角矩形，第二个参数是x半径，第三个参数是y半径
         }
-        RectF oval = new RectF(x, y + paint.ascent() - space, x + DisplayUtils.dip2px(30), y + paint.descent() + space);
-        canvas.drawRoundRect(oval, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);//绘制圆角矩形，第二个参数是x半径，第三个参数是y半径
-        Log.e("draw", "text==" + text + ";textHeight==" + textheight + ";y==" + y + ";paint.ascent" + paint.ascent() + ";space==" + space);
         currentPostion = -1;
         questionText = "";
     }
@@ -149,8 +167,13 @@ public class MyRadiusBgSpan extends ReplacementSpan {
         return questionText;
     }
 
+    public void setToTalSpanSize(int toTalSpanSize) {
+        this.totalSpanSize = toTalSpanSize;
+    }
+
     public interface OnSpanClickListener {
         void onSpanClick(int postion, MyRadiusBgSpan myRadiusBgSpan);
     }
+
 
 }

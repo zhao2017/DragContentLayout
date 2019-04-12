@@ -16,19 +16,6 @@ import android.widget.TextView;
 
 public class TouchLinkMovementMethod extends LinkMovementMethod {
 
-    private static TouchLinkMovementMethod touchLinkMovementMethod;
-
-    private TouchLinkMovementMethod(){
-
-    }
-
-    public static TouchLinkMovementMethod getInstance(){
-        if(touchLinkMovementMethod==null){
-            touchLinkMovementMethod = new TouchLinkMovementMethod();
-        }
-        return touchLinkMovementMethod;
-    }
-
 
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {

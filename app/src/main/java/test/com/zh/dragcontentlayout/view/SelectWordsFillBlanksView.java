@@ -4,12 +4,16 @@ import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Layout;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,8 +47,8 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
     private List<MyRadiusBgSpan> mList = new ArrayList<>();
     private Map<ClickableSpan, Integer> map = new HashMap<>();
     private int currentSpanPostion = 0;
-
     private MyRadiusBgSpan currentMyRadiusBgSpan;
+    private String mContent = "";
 
     public SelectWordsFillBlanksView(Context context) {
         this(context, null);
@@ -67,6 +71,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
 
     public void setData(String content) {
         String replace = content.replace(SPACE_TAG, FILL_TAG);
+        this.mContent = replace;
         map.clear();
         mList.clear();
         tvContent.setMovementMethod(null);
@@ -87,7 +92,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
                 }
             }
         });
-        tvContent.setMovementMethod(TouchLinkMovementMethod.getInstance());
+        tvContent.setMovementMethod( Method);
         tvContent.setText(spannableStringBuilder);
         tvContent.setHighlightColor(ContextCompat.getColor(mContext, R.color.transparent));
     }
@@ -118,12 +123,74 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         /**
          * 默认是取的是第一个Span
          */
-        if (currentMyRadiusBgSpan == null) {
-            currentMyRadiusBgSpan = mList.get(0);
-        }
-        currentMyRadiusBgSpan.setQuestionText(insertTextData, currentSpanPostion);
-        invalidateTv();
+        mList.get(currentSpanPostion).setToTalSpanSize(mList.size());
+        fillAnswer(insertTextData,currentSpanPostion);
     }
+
+    /**
+     *  填入内容后更新TextView
+     * @param insertTextData
+     * @param currentSpanPostion
+     */
+    private void fillAnswer(final String insertTextData, final int currentSpanPostion) {
+        mList.clear();
+        map.clear();
+        SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) Html.fromHtml(StringUtils.remove_p_tag(StringUtils.replaceUnderline(StringUtils.replaceExpression(mContent))), null, new Html.TagHandler() {
+            int index = 0;
+            @Override
+            public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+                if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
+                    index++;
+                    MyRadiusBgSpan myRadiusBgSpan = new MyRadiusBgSpan(mContext, index);
+                    if(currentSpanPostion==index-1){
+                        myRadiusBgSpan.setQuestionText(insertTextData,currentSpanPostion);
+                    }
+                    output.setSpan(myRadiusBgSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mList.add(myRadiusBgSpan);
+                    Log.e("out","out.length="+output.length());
+                }
+            }
+        });
+        spannableStringBuilder.insert(0,"hahah");
+        tvContent.setText(spannableStringBuilder);
+    }
+
+    //TextView触摸事件-->Span点击事件
+    private LinkMovementMethod Method = new LinkMovementMethod() {
+
+        @Override
+        public boolean onTouchEvent(TextView widget, Spannable buffer,
+                                    MotionEvent event) {
+            int action = event.getAction();
+
+            if (action == MotionEvent.ACTION_UP ||
+                    action == MotionEvent.ACTION_DOWN) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+
+                x -= widget.getTotalPaddingLeft();
+                y -= widget.getTotalPaddingTop();
+
+                x += widget.getScrollX();
+                y += widget.getScrollY();
+
+                Layout layout = widget.getLayout();
+                int line = layout.getLineForVertical(y);
+                int off = layout.getOffsetForHorizontal(line, x);
+
+                ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
+
+                if (link.length != 0) {
+                    //Span的点击事件
+                    if (action == MotionEvent.ACTION_DOWN) {
+                        link[0].onClick(widget);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
 
 
     /**
@@ -149,5 +216,8 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
     private void invalidateTv() {
         tvContent.invalidate();
     }
+
+
+
 
 }
