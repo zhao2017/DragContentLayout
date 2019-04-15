@@ -123,7 +123,6 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
                     if (answerList != null && answerList.size() > 0) {
                         String str = answerList.get(index - 1);
                         myRadiusBgSpan.setOriginalQuestionText(str);
-                        Log.e("index", "index==" + index + ";str=" + str);
                     }
                     mList.add(myRadiusBgSpan);
                     NolineClickSpan nolineClickSpan = new NolineClickSpan();
@@ -191,20 +190,23 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
                     if (currentSpanPostion == index - 1) {
                         myRadiusBgSpan.setQuestionText(insertTextData, currentSpanPostion);
                         textMap.put(currentSpanPostion, insertTextData);
-                    }
-                    if (textMap != null && textMap.size() > 0) {
-                        String orgStr = textMap.get(index - 1);
-                        if (currentSpanPostion != index - 1) {
-                            if (answerList != null && answerList.size() > 0) {
-                                // 这个地方是处理答案显示
-                                String str = answerList.get(index - 1);
-                                myRadiusBgSpan.setOriginalQuestionText(!TextUtils.isEmpty(orgStr) ? orgStr : str);
-                            } else {
+                    }else{
+                        if(answerList!=null&&answerList.size()>0){
+                            //回填答案处理
+                            String orgStr = "";
+                            if(textMap!=null&&textMap.size()>0){
+                                orgStr = textMap.get(index-1);
+                            }
+                            String str = answerList.get(index - 1);
+                            myRadiusBgSpan.setOriginalQuestionText(!TextUtils.isEmpty(orgStr) ? orgStr : str);
+                        }else{
+                            if(textMap!=null&&textMap.size()>0){
+                                String orgStr = textMap.get(index-1);
                                 myRadiusBgSpan.setOriginalQuestionText(orgStr);
                             }
                         }
-                        Log.e("orgStr", "orgStr==" + orgStr + ";currentSpanPostion==" + currentSpanPostion);
                     }
+                    Log.e("tag","index=="+index);
                     mList.add(myRadiusBgSpan);
                     NolineClickSpan nolineClickSpan = new NolineClickSpan();
                     map.put(nolineClickSpan, index);
