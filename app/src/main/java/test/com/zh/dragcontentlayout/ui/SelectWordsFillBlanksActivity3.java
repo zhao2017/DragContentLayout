@@ -37,7 +37,7 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
     SelectWordsFillBlanksView selectWordsView;
     @BindView(R.id.taglayout)
     TagFlowLayout taglayout;
-    private String content = "<p>途中的两个球相比[space][space]6的撒大家京东徐返多少发奥[space]8奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥吧范发9[space]卡了</p>";
+    private String content = "<p>途中的两个球相比1[space][space]2的撒大家京东徐返多少发奥3[space]4奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥吧范发5[space]6卡了</p>";
 
     private List<String> mList = new ArrayList<>();
 
