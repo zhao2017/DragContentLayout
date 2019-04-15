@@ -15,8 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zhy.view.flowlayout.TagFlowLayout;
-
 import org.xml.sax.XMLReader;
 
 import java.util.ArrayList;
@@ -39,13 +37,12 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
     private String MY_TAG_NAME = "mytag";
     private Context mContext;
     private TextView tvContent;
-    private TagFlowLayout tagFlowLayout;
     private List<MyRadiusBgSpan> mList = new ArrayList<>();
     private Map<ClickableSpan, Integer> map = new HashMap<>();
     private int currentSpanPostion = 0;
     private MyRadiusBgSpan currentMyRadiusBgSpan;
     private String mContent = "";
-
+    private List<String> answerList = new ArrayList<>();
     private Map<Integer, String> textMap = new HashMap<>();
 
     public SelectWordsFillBlanksView(Context context) {
@@ -67,6 +64,11 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         tvContent = view.findViewById(R.id.tv_content);
     }
 
+    /**
+     * 初始化原始数据没有添加内容的
+     *
+     * @param content
+     */
     public void setData(String content) {
         String replace = content.replace(SPACE_TAG, FILL_TAG);
         this.mContent = replace;
@@ -94,6 +96,47 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         tvContent.setText(spannableStringBuilder);
         tvContent.setHighlightColor(ContextCompat.getColor(mContext, R.color.transparent));
     }
+
+    /**
+     * 初始化数据里面，已经已经填入答案内容的
+     *
+     * @param content
+     * @param answerList
+     */
+    public void setData(String content, final List<String> answerList) {
+        String replace = content.replace(SPACE_TAG, FILL_TAG);
+        this.mContent = replace;
+        this.answerList = answerList;
+        map.clear();
+        mList.clear();
+        tvContent.setMovementMethod(null);
+        SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) Html.fromHtml(StringUtils.remove_p_tag(StringUtils.replaceUnderline(StringUtils.replaceExpression(replace))), null, new Html.TagHandler() {
+            int index = 0;
+
+            @Override
+            public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+                if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
+                    index++;
+                    MyRadiusBgSpan myRadiusBgSpan = new MyRadiusBgSpan(mContext, index);
+                    output.setSpan(myRadiusBgSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    if (answerList != null && answerList.size() > 0) {
+                        String str = answerList.get(index - 1);
+                        myRadiusBgSpan.setOriginalQuestionText(str);
+                        Log.e("index", "index==" + index + ";str=" + str);
+                    }
+                    mList.add(myRadiusBgSpan);
+                    NolineClickSpan nolineClickSpan = new NolineClickSpan();
+                    map.put(nolineClickSpan, index);
+                    output.setSpan(nolineClickSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Log.e("View", "length==" + output.length());
+                }
+            }
+        });
+        tvContent.setMovementMethod(new TouchLinkMovementMethod());
+        tvContent.setText(spannableStringBuilder);
+        tvContent.setHighlightColor(ContextCompat.getColor(mContext, R.color.transparent));
+    }
+
 
     public int getCurrentSpanPostion() {
         return currentSpanPostion;
@@ -137,6 +180,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         map.clear();
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) Html.fromHtml(StringUtils.remove_p_tag(StringUtils.replaceUnderline(StringUtils.replaceExpression(mContent))), null, new Html.TagHandler() {
             int index = 0;
+
             @Override
             public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
                 if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
@@ -147,13 +191,18 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
                         myRadiusBgSpan.setQuestionText(insertTextData, currentSpanPostion);
                         textMap.put(currentSpanPostion, insertTextData);
                     }
-                    //处理之前文字显示的源头
                     if (textMap != null && textMap.size() > 0) {
                         String orgStr = textMap.get(index - 1);
-                        if(currentSpanPostion!=index-1){
-                            myRadiusBgSpan.setOriginalQuestionText(orgStr);
+                        if (currentSpanPostion != index - 1) {
+                            if (answerList != null && answerList.size() > 0) {
+                                // 这个地方是处理答案显示
+                                String str = answerList.get(index - 1);
+                                myRadiusBgSpan.setOriginalQuestionText(str);
+                            } else {
+                                myRadiusBgSpan.setOriginalQuestionText(orgStr);
+                            }
                         }
-                        Log.e("orgStr", "orgStr==" + orgStr+";currentSpanPostion=="+currentSpanPostion);
+                        Log.e("orgStr", "orgStr==" + orgStr + ";currentSpanPostion==" + currentSpanPostion);
                     }
                     mList.add(myRadiusBgSpan);
                     NolineClickSpan nolineClickSpan = new NolineClickSpan();
@@ -184,15 +233,15 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         // 将下一个空格的颜色切换成选中的颜色，
         int nextPos = pos + 1;
         if (nextPos <= mList.size()) {
-            if(nextPos>mList.size()-1){
-                currentSpanPostion = nextPos-1;
-            }else{
+            if (nextPos > mList.size() - 1) {
+                currentSpanPostion = nextPos - 1;
+            } else {
                 currentSpanPostion = nextPos;
             }
             Log.e("nexpos", "nextPos==" + nextPos);
             for (int i = 0; i < mList.size(); i++) {
                 MyRadiusBgSpan myRadiusBgSpan = mList.get(i);
-                myRadiusBgSpan.setCurrentPostion(nextPos);
+                myRadiusBgSpan.setCurrentPostion(currentSpanPostion);
             }
         }
     }
@@ -219,6 +268,10 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
      */
     private void invalidateTv() {
         tvContent.invalidate();
+    }
+
+    public interface OnSelectWordsFillBlanksViewClickListener {
+
     }
 
 }

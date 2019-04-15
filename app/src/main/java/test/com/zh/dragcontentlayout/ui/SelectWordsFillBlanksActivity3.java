@@ -41,6 +41,8 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
 
     private List<String> mList = new ArrayList<>();
 
+    private List<String> answerList = new ArrayList<>();
+
     public static void navToActivity(Context context) {
         Intent intent = new Intent(context, SelectWordsFillBlanksActivity3.class);
         context.startActivity(intent);
@@ -51,7 +53,14 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_words_fill_blanks2);
         ButterKnife.bind(this);
+        initData1();
         initData();
+    }
+
+    private void initData1() {
+        for (int j = 0; j < 4; j++) {
+            answerList.add("j" + j);
+        }
     }
 
     private void initData() {
@@ -73,8 +82,10 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
                     break;
 
             }
+
         }
-        selectWordsView.setData(content);
+//        selectWordsView.setData(content);
+        selectWordsView.setData(content, answerList);
         taglayout.setAdapter(new TagAdapter<String>(mList) {
             private int dp2 = DisplayUtils.dip2px(2);
             private int dp8 = DisplayUtils.dip2px(8);
