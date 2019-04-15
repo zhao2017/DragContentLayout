@@ -7,6 +7,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -197,7 +198,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
                             if (answerList != null && answerList.size() > 0) {
                                 // 这个地方是处理答案显示
                                 String str = answerList.get(index - 1);
-                                myRadiusBgSpan.setOriginalQuestionText(str);
+                                myRadiusBgSpan.setOriginalQuestionText(!TextUtils.isEmpty(orgStr) ? orgStr : str);
                             } else {
                                 myRadiusBgSpan.setOriginalQuestionText(orgStr);
                             }
@@ -270,7 +271,10 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         tvContent.invalidate();
     }
 
+
+
     public interface OnSelectWordsFillBlanksViewClickListener {
+
 
     }
 
