@@ -96,6 +96,29 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         tvContent.setMovementMethod(new TouchLinkMovementMethod());
         tvContent.setText(spannableStringBuilder);
         tvContent.setHighlightColor(ContextCompat.getColor(mContext, R.color.transparent));
+        initIsComplete();
+    }
+
+    private void initIsComplete() {
+        if(mOnSelectWordsFillBlanksViewClickListener!=null){
+            if(answerList!=null&&answerList.size()>0){
+                // 这个说明是已经填过答案了
+                mOnSelectWordsFillBlanksViewClickListener.singleSelectWordsFillBlanksState(true);
+            }else{
+                if(textMap!=null&&textMap.size()>0){
+                    if(textMap.size()==mList.size()){
+                        mOnSelectWordsFillBlanksViewClickListener.singleSelectWordsFillBlanksState(true);
+                    }else{
+                        mOnSelectWordsFillBlanksViewClickListener.singleSelectWordsFillBlanksState(false);
+                    }
+                }else{
+                    // 表示还未完成
+                    mOnSelectWordsFillBlanksViewClickListener.singleSelectWordsFillBlanksState(false);
+                }
+
+            }
+
+        }
     }
 
     /**
@@ -135,6 +158,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         tvContent.setMovementMethod(new TouchLinkMovementMethod());
         tvContent.setText(spannableStringBuilder);
         tvContent.setHighlightColor(ContextCompat.getColor(mContext, R.color.transparent));
+        initIsComplete();
     }
 
 
@@ -180,7 +204,6 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         map.clear();
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) Html.fromHtml(StringUtils.remove_p_tag(StringUtils.replaceUnderline(StringUtils.replaceExpression(mContent))), null, new Html.TagHandler() {
             int index = 0;
-
             @Override
             public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
                 if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
@@ -221,6 +244,7 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
         if (currentSpanPostion < mList.size()) {
             next(currentSpanPostion);
         }
+        initIsComplete();
         for (Map.Entry<Integer, String> entry : textMap.entrySet()) {
             Log.e("map", "key==" + entry.getKey() + ";value==" + entry.getValue());
         }
@@ -274,9 +298,19 @@ public class SelectWordsFillBlanksView extends RelativeLayout implements MyRadiu
     }
 
 
+    private OnSelectWordsFillBlanksViewClickListener mOnSelectWordsFillBlanksViewClickListener;
+
+    public void setOnSingleSelectWordsFillBlanksClickListener(OnSelectWordsFillBlanksViewClickListener onSingleSelectWordsFillBlanksClickListener){
+        this.mOnSelectWordsFillBlanksViewClickListener = onSingleSelectWordsFillBlanksClickListener;
+    }
 
     public interface OnSelectWordsFillBlanksViewClickListener {
 
+        /**
+         *  用于判断选词填空是否完成
+         * @param isComplete
+         */
+         void singleSelectWordsFillBlanksState(boolean isComplete);
 
     }
 

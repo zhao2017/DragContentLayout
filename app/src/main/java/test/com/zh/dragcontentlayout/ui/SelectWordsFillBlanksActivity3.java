@@ -32,7 +32,6 @@ import test.com.zh.dragcontentlayout.view.SelectWordsFillBlanksView;
  */
 public class SelectWordsFillBlanksActivity3 extends Activity {
 
-
     @BindView(R.id.select_words_view)
     SelectWordsFillBlanksView selectWordsView;
     @BindView(R.id.taglayout)
@@ -42,6 +41,9 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
     private List<String> mList = new ArrayList<>();
 
     private List<String> answerList = new ArrayList<>();
+
+
+    private boolean isCanNext = false;
 
     public static void navToActivity(Context context) {
         Intent intent = new Intent(context, SelectWordsFillBlanksActivity3.class);
@@ -111,13 +113,23 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
                 int currentSpanPostion = selectWordsView.getCurrentSpanPostion();
-                Toast toast = Toast.makeText(SelectWordsFillBlanksActivity3.this, null, Toast.LENGTH_SHORT);
+             /*   Toast toast = Toast.makeText(SelectWordsFillBlanksActivity3.this, null, Toast.LENGTH_SHORT);
                 toast.setText("span的位置为=" + currentSpanPostion);
-                toast.show();
+                toast.show();*/
                 String currentQuestion = mList.get(position);
                 Log.e("currentQuestion", "currentQuestion==" + currentQuestion);
                 selectWordsView.setInsertTextData(currentQuestion, currentSpanPostion);
                 return false;
+            }
+        });
+        selectWordsView.setOnSingleSelectWordsFillBlanksClickListener(new SelectWordsFillBlanksView.OnSelectWordsFillBlanksViewClickListener() {
+            @Override
+            public void singleSelectWordsFillBlanksState(boolean isComplete) {
+                if (isComplete) {
+                    Toast.makeText(SelectWordsFillBlanksActivity3.this, "完成了啊", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SelectWordsFillBlanksActivity3.this, "未完成呢", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
