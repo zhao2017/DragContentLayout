@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
@@ -22,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import test.com.zh.dragcontentlayout.R;
 import test.com.zh.dragcontentlayout.utils.DisplayUtils;
-import test.com.zh.dragcontentlayout.view.SelectWordsFillBlanksView;
+import test.com.zh.dragcontentlayout.view.MultipleSelectWordsFillBlanksView;
 
 /**
  * 创建日期：2019/4/9
@@ -30,23 +29,20 @@ import test.com.zh.dragcontentlayout.view.SelectWordsFillBlanksView;
  *
  * @author: zhaoh
  */
-public class SelectWordsFillBlanksActivity3 extends Activity {
+public class SelectWordsFillBlanksMultipleActivity extends Activity {
 
     @BindView(R.id.select_words_view)
-    SelectWordsFillBlanksView selectWordsView;
+    MultipleSelectWordsFillBlanksView selectWordsView;
     @BindView(R.id.taglayout)
     TagFlowLayout taglayout;
-    private String content = "<p>途中的两个球相比1[space][space]2的撒大家京东徐返多少发奥3[space]4奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥奥吧范发5[space]6卡了</p>";
+    private String content = "<p>rule<br/>[space]<br/>rule<br/>[space]<br/></p>";
 
     private List<String> mList = new ArrayList<>();
 
     private List<String> answerList = new ArrayList<>();
 
-
-    private boolean isCanNext = false;
-
     public static void navToActivity(Context context) {
-        Intent intent = new Intent(context, SelectWordsFillBlanksActivity3.class);
+        Intent intent = new Intent(context, SelectWordsFillBlanksMultipleActivity.class);
         context.startActivity(intent);
     }
 
@@ -69,36 +65,37 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
         for (int i = 0; i < 5; i++) {
             switch (i) {
                 case 0:
-                    mList.add("激动河岸bucuo啦");
+                    mList.add("work");
                     break;
                 case 1:
-                    mList.add("开心");
+                    mList.add("milk");
                     break;
                 case 2:
-                    mList.add("棒");
+                    mList.add("hi");
                     break;
                 case 3:
-                    mList.add("a");
+                    mList.add("hade");
                 default:
-                    mList.add("课文长度不要钱的你多放点没事");
+                    mList.add("playbasketball");
                     break;
 
             }
 
         }
-//        selectWordsView.setData(content);
-        selectWordsView.setData(content, answerList);
+        selectWordsView.setData(content);
+//        selectWordsView.setData(content, answerList);
         taglayout.setAdapter(new TagAdapter<String>(mList) {
             private int dp2 = DisplayUtils.dip2px(2);
             private int dp8 = DisplayUtils.dip2px(8);
             private int dp10 = DisplayUtils.dip2px(10);
+
             @Override
             public View getView(FlowLayout parent, int position, String str) {
                 TextView textView = new TextView(parent.getContext());
                 textView.setPadding(dp8, dp2, dp8, dp2);
                 textView.setTextSize(20);
                 textView.setText(str);
-                textView.setTextColor(ContextCompat.getColor(SelectWordsFillBlanksActivity3.this, R.color.color_666));
+                textView.setTextColor(ContextCompat.getColor(SelectWordsFillBlanksMultipleActivity.this, R.color.color_666));
                 textView.setBackgroundResource(R.color.color_f7f7f9);
                 ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 lp.topMargin = dp8;
@@ -121,14 +118,9 @@ public class SelectWordsFillBlanksActivity3 extends Activity {
                 return false;
             }
         });
-        selectWordsView.setOnSingleSelectWordsFillBlanksClickListener(new SelectWordsFillBlanksView.OnSelectWordsFillBlanksViewClickListener() {
+        selectWordsView.setOnSingleSelectWordsFillBlanksClickListener(new MultipleSelectWordsFillBlanksView.OnSelectWordsFillBlanksViewClickListener() {
             @Override
             public void singleSelectWordsFillBlanksState(boolean isComplete) {
-                if (isComplete) {
-                    Toast.makeText(SelectWordsFillBlanksActivity3.this, "完成了啊", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(SelectWordsFillBlanksActivity3.this, "未完成呢", Toast.LENGTH_SHORT).show();
-                }
             }
         });
 
