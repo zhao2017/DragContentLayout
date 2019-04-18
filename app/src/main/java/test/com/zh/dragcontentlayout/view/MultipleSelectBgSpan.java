@@ -9,6 +9,9 @@ import android.text.TextPaint;
 import android.text.style.ReplacementSpan;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import test.com.zh.dragcontentlayout.R;
 import test.com.zh.dragcontentlayout.utils.DisplayUtils;
 
@@ -33,6 +36,8 @@ public class MultipleSelectBgSpan extends ReplacementSpan {
     private float leftPadding = DisplayUtils.dip2px(7);
     private String oriText = "";
 
+    private List<String> mList = new ArrayList<>();
+
     /**
      * @param radius 圆角半径
      */
@@ -44,10 +49,11 @@ public class MultipleSelectBgSpan extends ReplacementSpan {
         mPaint = new Paint();
     }
 
-    public MultipleSelectBgSpan(Context context, int postion) {
+    public MultipleSelectBgSpan(Context context, int postion, List<String> mQuestionList) {
         this.mContext = context;
         this.mPostion = postion;
         mPaint = new Paint();
+        this.mList = mQuestionList;
     }
 
     /**
@@ -95,23 +101,35 @@ public class MultipleSelectBgSpan extends ReplacementSpan {
     }
 
     @Override
-    public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
+    public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, final Paint paint) {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(ContextCompat.getColor(mContext, R.color.color_0093e8));
         mPaint.setStrokeWidth(DisplayUtils.dip2px(1));
         int index = 0;
         Log.e("ondraw", "text==" + text + ";start==" + start + ";end==" + end + ";x==" + x + ";y==" + y);
-        canvas.drawLine(0, y, DisplayUtils.getScreenWidth() / 2 - DisplayUtils.dip2px(15), y, mPaint);
+        Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+        float textHeight = fontMetrics.descent - fontMetrics.ascent;
         if (mPostion == 1) {
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < mList.size(); i++) {
                 RectF rectF = new RectF(DisplayUtils.dip2px(1) + i * (DisplayUtils.dip2px(8) + DisplayUtils.dip2px(30)), y - DisplayUtils.dip2px(6) - DisplayUtils.dip2px(30),
                         DisplayUtils.dip2px(30) + i * (DisplayUtils.dip2px(8) + DisplayUtils.dip2px(30)), y - DisplayUtils.dip2px(6));
                 canvas.drawRoundRect(rectF, DisplayUtils.dip2px(2), DisplayUtils.dip2px(2), mPaint);
             }
-            if (mOnSpanClickListener != null) {
-                mOnSpanClickListener.onSpanItemClick(index);
+            // 超屏幕的逻辑处理
+            if((DisplayUtils.dip2px(30)*mList.size()+(mList.size()-1)*DisplayUtils.dip2px(8))-DisplayUtils.dip2px(30)>DisplayUtils.getScreenWidth()){
+
+                canvas.drawLine(x,y,DisplayUtils.getScreenWidth(),y,mPaint);
+                canvas.drawLine(x,y+textHeight,DisplayUtils.getScreenWidth(),y+textHeight,mPaint);
+
+            }else{
+                if((DisplayUtils.dip2px(30)*mList.size()+(mList.size()-1)*DisplayUtils.dip2px(8))>DisplayUtils.getScreenWidth()/2){
+                    canvas.drawLine(0,y,DisplayUtils.getScreenWidth(),y,mPaint);
+                }else{
+                    canvas.drawLine(0, y, DisplayUtils.getScreenWidth() / 2 - DisplayUtils.dip2px(15), y, mPaint);
+                }
             }
+
         } else {
             RectF rectF = new RectF(DisplayUtils.dip2px(1), y - DisplayUtils.dip2px(6) - DisplayUtils.dip2px(30),
                     DisplayUtils.dip2px(30), y - DisplayUtils.dip2px(6));

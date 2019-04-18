@@ -292,7 +292,7 @@ public class StringUtils {
      * 移除只在首尾存在的p标签
      */
     public static String remove_p_tag(String content) {
-        if (TextUtils.isEmpty(content)) {
+        if (content==null||content.length()==0) {
             return "";
         }
         if (!content.toLowerCase().startsWith(P_START_TAG) && !content.toLowerCase().startsWith(P_START_TAG_WITH_SPACE)) {

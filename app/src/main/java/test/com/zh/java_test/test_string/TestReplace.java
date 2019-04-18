@@ -1,5 +1,7 @@
 package test.com.zh.java_test.test_string;
 
+import test.com.zh.dragcontentlayout.utils.StringUtils;
+
 /**
  * 创建日期：2019/4/8
  * 描述:测试replace
@@ -14,7 +16,14 @@ public class TestReplace {
          * target - 要被替换的 char 值序列
          * replacement - char 值的替换序列
          */
-        printStr(str.replace("cbbbbbbbbb","a"));
+
+        String data = "<p>rule[space]rule[space]</p>";
+        String needStr = StringUtils.remove_p_tag(data);
+        String[] strings = needStr.split("\\[space\\]");
+        for(String a:strings){
+            printStr(a);
+        }
+
     }
 
     public static void printStr(String str){

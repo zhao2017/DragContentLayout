@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zhy.view.flowlayout.TagFlowLayout;
+
 import org.xml.sax.XMLReader;
 
 import java.util.ArrayList;
@@ -45,6 +47,8 @@ public class MultipleSelectWordsFillBlanksView extends RelativeLayout implements
     private String mContent = "";
     private List<String> answerList = new ArrayList<>();
     private Map<Integer, String> textMap = new HashMap<>();
+    private TagFlowLayout tagFlowLayout = null;
+    private List<String> mQuestionList = new ArrayList<>();
 
     public MultipleSelectWordsFillBlanksView(Context context) {
         this(context, null);
@@ -63,6 +67,7 @@ public class MultipleSelectWordsFillBlanksView extends RelativeLayout implements
     private void initView() {
         View view = View.inflate(mContext, R.layout.layout_multiple_select_words_fill_blanks, this);
         tvContent = view.findViewById(R.id.tv_content);
+        tagFlowLayout = view.findViewById(R.id.flowLayout);
     }
 
     /**
@@ -73,10 +78,15 @@ public class MultipleSelectWordsFillBlanksView extends RelativeLayout implements
     public void setData(String content) {
         String replace = content.replace(SPACE_TAG, FILL_TAG);
         this.mContent = replace;
-        Log.e("mConent","mContent=="+mContent);
+        Log.e("mConent", "mContent==" + mContent);
         map.clear();
         mList.clear();
         tvContent.setMovementMethod(null);
+
+        for (int i = 0; i < 3; i++) {
+            mQuestionList.add("i");
+        }
+
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) Html.fromHtml(StringUtils.remove_p_tag(StringUtils.replaceUnderline(StringUtils.replaceExpression(replace))), null, new Html.TagHandler() {
             int index = 0;
 
@@ -84,13 +94,12 @@ public class MultipleSelectWordsFillBlanksView extends RelativeLayout implements
             public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
                 if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
                     index++;
-                    MultipleSelectBgSpan myRadiusBgSpan = new MultipleSelectBgSpan(mContext, index);
+                    MultipleSelectBgSpan myRadiusBgSpan = new MultipleSelectBgSpan(mContext, index,mQuestionList);
                     output.setSpan(myRadiusBgSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     mList.add(myRadiusBgSpan);
-//                    NolineClickSpan nolineClickSpan = new NolineClickSpan();
-//                    map.put(nolineClickSpan, index);
-//                    output.setSpan(nolineClickSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    Log.e("View", "length==" + output.length());
+                    NolineClickSpan nolineClickSpan = new NolineClickSpan();
+                    map.put(nolineClickSpan, index);
+                    output.setSpan(nolineClickSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
         });
@@ -142,7 +151,7 @@ public class MultipleSelectWordsFillBlanksView extends RelativeLayout implements
             public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
                 if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
                     index++;
-                    MultipleSelectBgSpan myRadiusBgSpan = new MultipleSelectBgSpan(mContext, index);
+                    MultipleSelectBgSpan myRadiusBgSpan = new MultipleSelectBgSpan(mContext, index, mQuestionList);
                     output.setSpan(myRadiusBgSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     if (answerList != null && answerList.size() > 0) {
                         String str = answerList.get(index - 1);
@@ -182,7 +191,7 @@ public class MultipleSelectWordsFillBlanksView extends RelativeLayout implements
     @Override
     public void onSpanItemClick(int index) {
         Toast toast = Toast.makeText(mContext, null, Toast.LENGTH_SHORT);
-        toast.setText("index==" +index);
+        toast.setText("index==" + index);
         toast.show();
     }
 
@@ -217,7 +226,8 @@ public class MultipleSelectWordsFillBlanksView extends RelativeLayout implements
             public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
                 if (tag.equalsIgnoreCase(MY_TAG_NAME) && opening) {
                     index++;
-                    MultipleSelectBgSpan myRadiusBgSpan = new MultipleSelectBgSpan(mContext, index);
+                    mQuestionList.add(";");
+                    MultipleSelectBgSpan myRadiusBgSpan = new MultipleSelectBgSpan(mContext, index, mQuestionList);
                     output.setSpan(myRadiusBgSpan, output.length() - 1, output.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     if (currentSpanPostion == index - 1) {
                         myRadiusBgSpan.setQuestionText(insertTextData, currentSpanPostion);
