@@ -36,6 +36,8 @@ public class BottomSheetDemoActivity extends Activity {
 
     private List<String> mList = new ArrayList<>();
 
+    private String voiceUrl = "http://test.video.juziwl.cn/exuetea/android/20190423/61e3d84d8d684e28ae28f4b230feee97.mp4";
+
     public static void navToActivity(Context context) {
         Intent intent = new Intent(context, BottomSheetDemoActivity.class);
         context.startActivity(intent);

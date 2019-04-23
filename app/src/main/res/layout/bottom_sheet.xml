@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#f99"
     android:orientation="vertical"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
@@ -23,6 +23,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

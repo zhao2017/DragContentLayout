@@ -6,6 +6,7 @@ import android.view.View;
 
 import test.com.zh.dragcontentlayout.ui.SelectWordsFillBlanksMultipleActivity;
 import test.com.zh.dragcontentlayout.ui.SpannableStringActivity;
+import test.com.zh.dragcontentlayout.ui.VoiceTestActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onNextClick(View view) {
-        BottomSheetDemoActivity.navToActivity(MainActivity.this);
+        VoiceTestActivity.navToActivity(MainActivity.this);
     }
 
     public void onClickStringSpannable(View view) {

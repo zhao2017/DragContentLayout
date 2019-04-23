@@ -21,8 +21,9 @@
         <activity android:name=".ui.SpannableStringActivity" />
         <activity android:name=".ui.SelectWordsFillBlanksActivity" />
         <activity android:name=".ui.SelectWordsFillBlanksActivity2" />
-        <activity android:name=".ui.SelectWordsFillBlanksActivity3"/>
-        <activity android:name=".ui.SelectWordsFillBlanksMultipleActivity"/>
+        <activity android:name=".ui.SelectWordsFillBlanksActivity3" />
+        <activity android:name=".ui.SelectWordsFillBlanksMultipleActivity" />
+        <activity android:name=".ui.VoiceTestActivity" />
     </application>
 
 </manifest>
