@@ -2,6 +2,7 @@ package test.com.zh.dragcontentlayout.utils;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,6 +26,8 @@ public class VoiceUtils {
 
     /**
      * 播放音频 带有倒计时控件
+     * 支持暂停功能
+     * 再次点击重新播放
      *
      * @param tvTime
      * @param sTime
@@ -53,7 +56,7 @@ public class VoiceUtils {
                 && file.getAbsolutePath().equals(MediaUtil.getInstance().getCurrentPlayFile())
                 && isPlaying) {
             currentPlayId = "";
-            MediaUtil.getInstance().stop();
+            MediaUtil.getInstance().onPause();
             if (view != null) {
                 animationDrawable.stop();
                 animationDrawable.selectDrawable(0);
@@ -183,28 +186,45 @@ public class VoiceUtils {
             } else {
                 updateVoiceTimeThread = null;
             }
-
             MediaUtil.getInstance().setOnStartListener(() -> {
                 if (updateVoiceTimeThread != null) {
                     updateVoiceTimeThread.start();
                 }
             });
-
-            MediaUtil.getInstance().setEventListener(() -> {
-                currentPlayId = "";
-                if (frameAnimatio != null) {
-                    frameAnimatio.stop();
-                    frameAnimatio.selectDrawable(0);
-                }
-                if (updateVoiceTimeThread != null) {
-                    updateVoiceTimeThread.stop();
-                }
-            });
-
             MediaUtil.getInstance().play(file);
             if (frameAnimatio != null) {
                 frameAnimatio.start();
             }
+            //这个地方需要注意，这个地方要在播放开始之后才能调用
+            MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
+                @Override
+                public void onStop() {
+                    Log.e("Voice", "onStop");
+                    if (frameAnimatio != null) {
+                        frameAnimatio.stop();
+                        frameAnimatio.selectDrawable(0);
+                    }
+                    if (updateVoiceTimeThread != null) {
+                        updateVoiceTimeThread.stop();
+                    }
+                    ToastUtils.showToast("这个是完成后做的回调哦");
+                }
+            });
+
+            MediaUtil.getInstance().setOnPauseListener(new MediaUtil.OnPauseListener() {
+                @Override
+                public void onPause() {
+                    ToastUtils.showToast("暂停了啊");
+                    if (frameAnimatio != null) {
+                        frameAnimatio.stop();
+                        frameAnimatio.selectDrawable(0);
+                    }
+                    if (updateVoiceTimeThread != null) {
+                        updateVoiceTimeThread.pause();
+                    }
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }

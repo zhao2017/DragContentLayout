@@ -16,8 +16,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import test.com.zh.dragcontentlayout.R;
+import test.com.zh.view.VoiceView;
 
 /**
  * 创建日期：2019/4/1
@@ -28,10 +30,16 @@ import test.com.zh.dragcontentlayout.R;
 public class VoiceTestActivity extends Activity {
 
     private static final String TAG = VoiceTestActivity.class.getSimpleName();
+    @BindView(R.id.voice)
+    VoiceView voice;
 
     private List<String> mList = new ArrayList<>();
 
     private String voiceUrl = "http://test.video.juziwl.cn/exuetea/android/20190423/61e3d84d8d684e28ae28f4b230feee97.mp4";
+    private String voiceUrl2 = "http://test.video.juziwl.cn/exuetea/android/20190424/8607fd453d6945fc990b1a445d698e62.mp4";
+
+    private long time = 10;
+    private long time2 = 2;
 
     public static void navToActivity(Context context) {
         Intent intent = new Intent(context, VoiceTestActivity.class);
@@ -50,6 +58,7 @@ public class VoiceTestActivity extends Activity {
         for (int i = 0; i < 20; i++) {
             mList.add("测试数据" + i);
         }
+        voice.setVoiceUrlAndLengh(voiceUrl,time);
     }
 
 

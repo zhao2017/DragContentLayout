@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 
 
 import java.io.File;
@@ -17,7 +18,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  */
 public class MediaUtil {
 
-    private static final String TAG = "MediaUtil";
+    public static final String TAG = "MediaUtil";
 
     private IMediaPlayer player;
     private EventListener eventListener;
@@ -25,6 +26,7 @@ public class MediaUtil {
     private AudioManager audioManager = null;
     private AudioManager.OnAudioFocusChangeListener changeListener = null;
     private OnStartListener onStartListener;
+    private OnPauseListener onPauseListener =null;
 
     private MediaUtil() {
         IjkMediaPlayer.loadLibrariesOnce(null);
@@ -56,6 +58,7 @@ public class MediaUtil {
                 if (this.eventListener != null) {
                     this.eventListener.onStop();
                     this.eventListener = null;
+                    Log.e("Voice","OnCompletionListener");
                 }
                 currentPlayFile = null;
                 try {
@@ -68,6 +71,7 @@ public class MediaUtil {
     }
 
     public void play(File file) {
+        Log.e("Voice","play");
         try {
             if (eventListener != null) {
                 eventListener.onStop();
@@ -92,6 +96,7 @@ public class MediaUtil {
             player.start();
             if (onStartListener != null) {
                 onStartListener.onStart();
+                Log.e("Voice","onStart");
             }
         } catch (Exception e) {
 
@@ -112,6 +117,18 @@ public class MediaUtil {
             e.printStackTrace();
         }
         currentPlayFile = null;
+    }
+
+
+
+
+    public void  onPause(){
+        if (player != null && player.isPlaying()) {
+            player.pause();
+        }
+        if(onPauseListener!=null){
+            onPauseListener.onPause();
+        }
     }
 
     public long getDuration(String path) {
@@ -147,4 +164,18 @@ public class MediaUtil {
     public interface EventListener {
         void onStop();
     }
+
+
+    public void setOnPauseListener(OnPauseListener onCompleteListener){
+        this.onPauseListener = onCompleteListener;
+    }
+
+    /**
+     *  播放器完成播放
+     */
+
+    public interface OnPauseListener{
+         void onPause();
+    }
+
 }

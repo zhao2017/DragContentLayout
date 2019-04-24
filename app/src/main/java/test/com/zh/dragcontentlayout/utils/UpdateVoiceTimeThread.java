@@ -1,6 +1,7 @@
 package test.com.zh.dragcontentlayout.utils;
 
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -31,7 +32,8 @@ public class UpdateVoiceTimeThread {
     private UpdateVoiceTimeThread(long sTime, TextView tv) {
         this.tv = tv;
         time = StringUtils.formatVoiceTime(sTime);
-        l = sTime;
+        l = sTime * 1000;
+        tv.setText(time);
     }
 
     private CountDownTimer getTimer() {
@@ -40,18 +42,17 @@ public class UpdateVoiceTimeThread {
             cdt = null;
         }
         cdt = new CountDownTimer(l, TIME_CHANGE_DELAY) {
-
             @Override
             public void onTick(long millisUntilFinished) {
                 // TODO Auto-generated method stub
-                tv.setText(StringUtils.formatVoiceTime(millisUntilFinished));
                 l = l - TIME_CHANGE_DELAY;
+                Log.e("onTick", "l==" + l + ";millisUntilFinished==" + millisUntilFinished);
+                tv.setText(StringUtils.formatVoiceTime(millisUntilFinished / 1000));
             }
 
             @Override
             public void onFinish() {
                 tv.setText(time);
-
             }
 
         };
@@ -65,7 +66,7 @@ public class UpdateVoiceTimeThread {
 
     public void pause() {
         cdt.cancel();
-        tv.setText(StringUtils.formatVoiceTime(l));
+        tv.setText(StringUtils.formatVoiceTime(l / 1000));
     }
 
     public void stop() {

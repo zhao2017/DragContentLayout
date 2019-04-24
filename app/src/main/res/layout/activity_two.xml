@@ -5,9 +5,10 @@
     android:layout_height="match_parent">
 
     <test.com.zh.view.VoiceView
+        android:id="@+id/voice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        app:isNeedCountDown="false"
+        app:isNeedCountDown="true"
         app:isTeacher="true" />
 </RelativeLayout>

@@ -28,6 +28,7 @@ dependencies {
 //    api rootProject.ext.deps["ijkplayer-x86"]
 //    api rootProject.ext.deps["ijkplayer-java"]
     api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
+    api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.4'
 //    api rootProject.ext.deps["ijkplayer-armv7a"]
 //      api rootProject.ext.deps["ijkplayer-exo"]
     // 修改后的
