@@ -52,7 +52,10 @@ public class TestSplit {
             for (int j = 0; j < dataList.size(); j++) {
                 SelectFillData.ListTitleAnswerData answerData = dataList.get(j);
                 List<String> strings = formatStringToList(answerData.content);
-                printStr("strings.size"+strings.size());
+                for(String str:strings){
+                    printStr(str);
+                }
+                printStr("strings.size="+strings.size());
             }
         }
 
