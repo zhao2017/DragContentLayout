@@ -6,4 +6,18 @@
         <attr name="isNeedCountDown" format="boolean"/>
     </declare-styleable>
 
+    <!--   填空题控件     -->
+    <declare-styleable name="inputView">
+        <!--填空题的分隔符-->
+        <attr name="input_tag" format="string" />
+        <!--颜色-->
+        <attr name="et_color" format="color" />
+        <attr name="tv_color" format="color" />
+        <!--文字大小-->
+        <attr name="tv_size" format="integer" />
+        <attr name="et_size" format="integer" />
+        <!--下划线长度-->
+        <attr name="et_width_dp" format="integer" />
+    </declare-styleable>
+
 </resources>

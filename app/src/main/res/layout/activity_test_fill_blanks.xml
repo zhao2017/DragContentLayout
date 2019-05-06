@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <test.com.zh.view.InputView
+        android:padding="15dp"
+        app:et_color="@color/color_0093e8"
+        app:et_size="15"
+        app:et_width_dp="100"
+        app:tv_color="@color/color_333"
+        app:tv_size="15"
+        android:id="@+id/inputView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

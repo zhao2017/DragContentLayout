@@ -9,8 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import test.com.zh.dragcontentlayout.R;
+import test.com.zh.dragcontentlayout.utils.MediaUtil;
 import test.com.zh.dragcontentlayout.utils.RxUtils;
 import test.com.zh.dragcontentlayout.utils.StringUtils;
+import test.com.zh.dragcontentlayout.utils.UIHandler;
 import test.com.zh.dragcontentlayout.utils.VoiceUtils;
 
 /**
@@ -67,6 +69,12 @@ public class VoiceView extends FrameLayout {
                 VoiceUtils.playVoiceWithTimer(tvTime, mLength, scaleView, mUrl, "1");
             }
         });
+        UIHandler.getInstance().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                VoiceUtils.playVoiceWithTimer(tvTime, mLength, scaleView, mUrl, "1");
+            }
+        },200);
 
     }
 
@@ -75,5 +83,11 @@ public class VoiceView extends FrameLayout {
         this.mUrl = url;
         this.mLength = len;
         tvTime.setText(StringUtils.formatVoiceTime(len));
+    }
+
+    public void setStopVoice() {
+        if(VoiceUtils.isVoicePlay()){
+            MediaUtil.getInstance().stop();
+        }
     }
 }

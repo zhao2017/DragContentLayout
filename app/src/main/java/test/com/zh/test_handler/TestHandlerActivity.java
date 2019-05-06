@@ -1,6 +1,8 @@
 package test.com.zh.test_handler;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
 
 
 /**
@@ -10,5 +12,29 @@ import android.app.Activity;
  * @author: zhaoh
  */
 public class TestHandlerActivity extends Activity {
+
+    public static void main(String[] args) {
+
+        Message.obtain().recycle();
+        Handler handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+            }
+        };
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
+        for (int i = 0; i < 20; i++) {
+            
+        }
+    }
+    
+    
+
 
 }

@@ -11,9 +11,9 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
+import test.com.zh.dragcontentlayout.ui.FillBlanksTestActivity;
 import test.com.zh.dragcontentlayout.ui.SelectWordsFillBlanksMultipleActivity;
 import test.com.zh.dragcontentlayout.ui.SpannableStringActivity;
-import test.com.zh.dragcontentlayout.ui.VoiceTestActivity;
 import test.com.zh.dragcontentlayout.utils.ToastUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,8 +44,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onNextClick(View view) {
+   /* public void onNextClick(View view) {
         VoiceTestActivity.navToActivity(MainActivity.this);
+    }*/
+    public void onNextClick(View view) {
+        FillBlanksTestActivity.navToActivity(MainActivity.this);
     }
 
     public void onClickStringSpannable(View view) {

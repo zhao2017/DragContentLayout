@@ -120,14 +120,12 @@ public class MediaUtil {
     }
 
 
-
-
     public void  onPause(){
         if (player != null && player.isPlaying()) {
             player.pause();
-        }
-        if(onPauseListener!=null){
-            onPauseListener.onPause();
+            if(onPauseListener!=null){
+                onPauseListener.onPause();
+            }
         }
     }
 

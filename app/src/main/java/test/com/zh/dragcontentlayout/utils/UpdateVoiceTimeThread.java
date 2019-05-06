@@ -33,7 +33,6 @@ public class UpdateVoiceTimeThread {
         this.tv = tv;
         time = StringUtils.formatVoiceTime(sTime);
         l = sTime * 1000;
-        tv.setText(time);
     }
 
     private CountDownTimer getTimer() {
@@ -45,13 +44,14 @@ public class UpdateVoiceTimeThread {
             @Override
             public void onTick(long millisUntilFinished) {
                 // TODO Auto-generated method stub
-                l = l - TIME_CHANGE_DELAY;
                 Log.e("onTick", "l==" + l + ";millisUntilFinished==" + millisUntilFinished);
-                tv.setText(StringUtils.formatVoiceTime(millisUntilFinished / 1000));
+                tv.setText(StringUtils.formatVoiceTime(l/1000));
+                l = l - TIME_CHANGE_DELAY;
             }
 
             @Override
             public void onFinish() {
+                Log.e("onTick","onFinish");
                 tv.setText(time);
             }
 
@@ -65,7 +65,11 @@ public class UpdateVoiceTimeThread {
     }
 
     public void pause() {
-        cdt.cancel();
+        instance = null;
+        if (cdt != null) {
+            cdt.cancel();
+            cdt = null;
+        }
         tv.setText(StringUtils.formatVoiceTime(l / 1000));
     }
 

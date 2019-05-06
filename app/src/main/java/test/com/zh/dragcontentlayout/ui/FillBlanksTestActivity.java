@@ -19,7 +19,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import test.com.zh.dragcontentlayout.R;
-import test.com.zh.view.VoiceView;
+import test.com.zh.view.InputView;
 
 /**
  * 创建日期：2019/4/1
@@ -27,29 +27,26 @@ import test.com.zh.view.VoiceView;
  *
  * @author: zhaoh
  */
-public class VoiceTestActivity extends Activity {
+public class FillBlanksTestActivity extends Activity {
 
-    private static final String TAG = VoiceTestActivity.class.getSimpleName();
-    @BindView(R.id.voice)
-    VoiceView voice;
+    private static final String TAG = FillBlanksTestActivity.class.getSimpleName();
+    @BindView(R.id.inputView)
+    InputView inputView;
 
     private List<String> mList = new ArrayList<>();
 
-    private String voiceUrl = "http://test.video.juziwl.cn/exuetea/android/20190423/61e3d84d8d684e28ae28f4b230feee97.mp4";
-    private String voiceUrl2 = "http://test.video.juziwl.cn/exuetea/android/20190424/8607fd453d6945fc990b1a445d698e62.mp4";
 
-    private long time = 10;
-    private long time2 = 2;
+private String context = "<p>张三的爸爸是[space]，妈妈是[space]</p>";
 
     public static void navToActivity(Context context) {
-        Intent intent = new Intent(context, VoiceTestActivity.class);
+        Intent intent = new Intent(context, FillBlanksTestActivity.class);
         context.startActivity(intent);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_two);
+        setContentView(R.layout.activity_test_fill_blanks);
         ButterKnife.bind(this);
         initData();
     }
@@ -58,14 +55,33 @@ public class VoiceTestActivity extends Activity {
         for (int i = 0; i < 20; i++) {
             mList.add("测试数据" + i);
         }
-        voice.setVoiceUrlAndLengh(voiceUrl,time);
+        inputView.setTvContent(context);
+        inputView.setOnInputClickListener(new InputView.OnInputClickListener() {
+            @Override
+            public void getPosition(int num) {
+
+                Log.e("postion","postion=="+num);
+
+            }
+
+            @Override
+            public void onClickInput() {
+
+
+            }
+
+            @Override
+            public void inputTextState(boolean isSubmit) {
+
+            }
+        });
+        inputView.requestInputEvent();
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        voice.setStopVoice();
     }
 
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
@@ -104,7 +120,6 @@ public class VoiceTestActivity extends Activity {
             }
         }
     }
-
 
     private void initBottomSheet() {
         LinearLayout view = findViewById(R.id.ll_bottom_sheet);
